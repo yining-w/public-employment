@@ -1,0 +1,40 @@
+---
+title: "exploratory analysis"
+author: "Yi Ning"
+date: "10/29/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r cars}
+# Set up file pathing
+setwd(file.path('..'))
+
+project_data <- file.path('Data')
+  # Set this director to the project data folder, relative to the project root folder.
+  # Note that all filepaths for this codebase are referenced below in #specifications
+  # and are relative to the project root folder
+
+project_code <- file.path('Code')
+  # Set this director to the project code folder, relative to the project root folder.
+  # All code needs to be in this folder, including this present script.
+
+project_output <- file.path('Output')
+  # Set this director to the project output folder, relative to the project root folder.
+  # This is where all plots will be saved to by default.
+
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

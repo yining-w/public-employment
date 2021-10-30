@@ -1,0 +1,1 @@
+This placeholder file is meant to keep the folder structure in place where files are not cloned.
