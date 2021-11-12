@@ -24,7 +24,7 @@
 			gen						year = 2020
 			
 			// no minority question, but race question in 2020
-			keep agency postwt year q* dsex drno dhisp dsuper dleaving* dagegrp dfedten v*
+			keep agency postwt year q* dsex drno dhisp dsuper dleaving* dfedten v*
 			
 			*for COVID questions - assign different variable names 
 			rename q58 q58_c
@@ -58,22 +58,25 @@
 				replace `i' = "1" if `i' == "B"
 			}
 			
-			foreach i in a b c {
+			foreach i in a b {
 			replace leaving`i' = "1" if leaving`i' != "A"
 			replace leaving`i' = "0" if leaving`i' == "A"
 			}
 			
 			// Make Categories more clear
 			// Years of Experience
-			replace yrs_exp = "5 or less" if yrs_exp == "A"
-			replace yrs_exp = "6 to 14" if yrs_exp == "B"
-			replace yrs_exp = "15 plus" if yrs_exp == "C"
+			replace yrs_exp = "10 or less" if yrs_exp == "A" 
+			replace yrs_exp = "10 to 20" if yrs_exp == "B" 
+			replace yrs_exp = "20+" if yrs_exp == "C"
+			label var yrs_exp "Years of experience from 2010-2012, 2017-2020"
 			
-			// Age Group
-			replace agegrp = "Under 40" if agegrp == "A"
-			replace agegrp = "40-59" if agegrp == "B"
-			replace agegrp = "50-59" if agegrp == "C"
-			replace agegrp = "60 or older" if agegrp == "D"
+			// years of experience dummy
+			gen yrs_exp2 = yrs_exp
+			replace yrs_exp2 = "1" if yrs_exp2 == "C"
+			replace yrs_exp2 = "0" if yrs_exp2 != "C"
+			label var yrs_exp2 "20+ Years of experience from 2010-2012, 2017-2020"
+			
+			destring yrs_exp2, replace
 			
 			// make numeric
 			foreach var in male super leavinga leavingb leavingc {
@@ -129,11 +132,11 @@
 			save "$output/2020_clean.dta", replace
 			
 			// create a version compatible with previous years and not including covid questions
-			keep q1-q71 agency race hisp agegrp super yrs_exp male leaving* postwt year
+			keep q1-q71 agency race hisp super yrs_exp male leaving* postwt year
 			
-			append using "$output/panel_clean.dta"
+			//append using "$output/panel_clean.dta"
 			
-			save "$output/panel_clean.dta", replace
+			//save "$output/panel_clean.dta", replace
 			
 			// create a full 2020 version with covid questions
 			use "$output/2020_clean.dta", clear
@@ -182,6 +185,8 @@
 	
 	append using "$output/panel_clean_dummy.dta"
 	
+	// group leaving b (2020) and leaving (2010 - 2019)
+	replace leaving = leavingb if year == 2020
 	// drop covid questions
 	drop v* q*_0*_c *_c
 			

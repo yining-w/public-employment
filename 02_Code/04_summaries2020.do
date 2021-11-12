@@ -108,7 +108,7 @@
 		gen N = 1
 
 		// % of positive responses
-	 	collapse (mean) q1-v24 (sum) N, by(agency race year)
+	 	collapse (mean) q1-v24 (sum) N, by(agency race male year)
 		
 		// total average 
 		egen average = rowmean(q1-v24)
@@ -156,6 +156,22 @@
 		order agency year average*
 		
 		export excel "$output/positive_responses_2020.xlsx", sheet("By Years of Exp", modify) firstrow(variable)
+		
+		// By Agency + Minority + Gender + Supervisor
+		use "$output/2020_clean_dummy.dta", clear
+		
+		// Create a variable for number of observations
+		gen N = 1
+
+		// % of positive responses
+	 	collapse (sum) N, by(agency)
+		
+		// total average 
+		egen average = rowmean(q1-v24)
+		egen average_core = rowmean(q1-q71)
+		egen average_covid = rowmean(v21_01-v24)
+		
+		order agency race year average*
 		
 		
 ************************************************************************************************************
